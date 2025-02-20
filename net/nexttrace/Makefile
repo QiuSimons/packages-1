@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nexttrace
-PKG_VERSION:=1.2.4
+PKG_VERSION:=1.3.7
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/nxtrace/NTrace-core/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=1ff9ce0d0d25078891e62ca0578ff13b1ece36e732f78a699a39909baf0030db
+PKG_HASH:=94f8893f80b6b0a8d02b2fe709a62557034f3e32879a55807c38cb6ee2f8ab01
 PKG_BUILD_DIR:=$(BUILD_DIR)/NTrace-core-$(PKG_VERSION)
 
 PKG_LICENSE:=GPL-3.0-only
@@ -18,6 +18,7 @@ PKG_BUILD_PARALLEL:=1
 PKG_BUILD_FLAGS:=no-mips16
 
 GO_PKG:=github.com/nxtrace/NTrace-core
+GO_PKG_LDFLAGS:=-checklinkname=0
 GO_PKG_LDFLAGS_X:=$(GO_PKG)/config.Version=v$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk

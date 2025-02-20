@@ -6,34 +6,45 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=node
 
-ifeq ($(CONFIG_NODEJS_21),y)
-PKG_VERSION:=v21.1.0
+ifeq ($(CONFIG_NODEJS_20),y)
+PKG_VERSION:=20.18.3
 PKG_RELEASE:=1
-PKG_HASH:=91ac72e4444c5e5ab4b448030a61ffa95acd35d34a9d31d2d220ee2bed01b925
-PATCH_DIR:=./patches/v21.x
-NODEJS_BIN_SUM:=6a1020b5605ba4b4a89b08147e5fd124bd9d1fd5bfe5301fe0567af67bf0e335
-NODE_MODULE_VERSION:=120
+PKG_HASH:=eba088fa562735140b283c7bb33f53e026ccd5febe68c52c5737ef6e577ec874
+PATCH_DIR:=./patches/v20.x
+NODEJS_BIN_SUM:=9fc3952da39b20d1fcfdb777b198cc035485afbbb1004b4df93f35245d61151e
+NODE_MODULE_VERSION:=115
 else
 ifeq ($(CONFIG_NODEJS_18),y)
-PKG_VERSION:=v18.18.2
+PKG_VERSION:=18.20.6
 PKG_RELEASE:=1
-PKG_HASH:=7249e2f0af943ec38599504f4b2a2bd31fb938787291b6ccca6c8badf01e3b56
+PKG_HASH:=e7ddfeabea3d1f7cc622cc9861d2fb0955b9e60940dbbedbed6f2f821ab3e4c7
 PATCH_DIR:=./patches/v18.x
-NODEJS_BIN_SUM:=75aba25ae76999309fc6c598efe56ce53fbfc221381a44a840864276264ab8ac
+NODEJS_BIN_SUM:=bff0672c5117e6f0809c456d9194630b5886442ddf298b2292529959c45b92c0
 NODE_MODULE_VERSION:=108
 else
-PKG_VERSION:=v20.9.0
+ifeq ($(CONFIG_NODEJS_23),y)
+PKG_VERSION:=23.8.0
 PKG_RELEASE:=1
-PKG_HASH:=a23d96810abf0455426b349d47ce5310f33095b7bc0571b9cc510f481c3a4519
-PATCH_DIR:=./patches/v20.x
-NODEJS_BIN_SUM:=9033989810bf86220ae46b1381bdcdc6c83a0294869ba2ad39e1061f1e69217a
-NODE_MODULE_VERSION:=115
+PKG_HASH:=23b5e0b0b6752a21c7af4e2361655a54ad499d3ae06b6f9af1dd311365b8496a
+PATCH_DIR:=./patches/v23.x
+NODEJS_BIN_SUM:=f6d98bbdd0a4078c1e422a6a1d8bf07ad693a4dd793bb5772990456faeca6e95
+NODE_MODULE_VERSION:=131
+else
+PKG_VERSION:=22.14.0
+PKG_RELEASE:=1
+PKG_HASH:=6c4e31ed5702dc45cfd8c435af56a36a474427e1bd7afe74c346136060beba8a
+PATCH_DIR:=./patches/v22.x
+NODEJS_BIN_SUM:=9d942932535988091034dc94cc5f42b6dc8784d6366df3a36c4c9ccb3996f0c2
+NODE_MODULE_VERSION:=127
+endif
 endif
 endif
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://mirrors.tencent.com/nodejs-release/$(PKG_VERSION) \
-                https://nodejs.org/dist/$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-v$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://mirrors.tencent.com/nodejs-release/v$(PKG_VERSION) \
+                https://nodejs.org/dist/v$(PKG_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-v$(PKG_VERSION)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)-v$(PKG_VERSION)
 
 PKG_MAINTAINER:=Hirokazu MORIKAWA <morikw2@gmail.com>
 PKG_LICENSE:=MIT
@@ -93,7 +104,7 @@ define Package/node/config
 
 	choice
 		prompt "Version Selection"
-		default NODEJS_18
+		default NODEJS_20
 		help
 		 Select node.js version.
 		 The host package version is also the same.
@@ -102,10 +113,13 @@ define Package/node/config
 			bool "18.x Maintenance LTS"
 
 		config NODEJS_20
-			bool "20.x Active LTS"
+			bool "20.x Maintenance LTS"
 
-		config NODEJS_21
-			bool "21.x Current"
+		config NODEJS_22
+			bool "22.x Active LTS"
+
+		config NODEJS_23
+			bool "23.x Current"
 	endchoice
 
 	if PACKAGE_node
@@ -222,10 +236,10 @@ endef
 
 ifeq ($(CONFIG_NODEJS_HOST_BIN),y)
 
-NODEJS_BIN:=node-$(PKG_VERSION)-linux-x64.tar.xz
+NODEJS_BIN:=node-v$(PKG_VERSION)-linux-x64.tar.gz
 
 define Download/nodebin
-	URL:=https://nodejs.org/download/release/$(PKG_VERSION)/
+	URL:=https://nodejs.org/download/release/v$(PKG_VERSION)/
 	FILE:=$(NODEJS_BIN)
 	HASH:=$(NODEJS_BIN_SUM)
 endef
@@ -248,7 +262,7 @@ define Host/Install
 	rm -rf $(1)/lib/node_modules/npm
 	rm -f $(1)/bin/corepack
 	rm -rf $(1)/lib/node_modules/corepack
-	$(TAR) xvfJ $(DL_DIR)/$(NODEJS_BIN) -C $(1) --strip-components=1
+	$(TAR) xvf $(DL_DIR)/$(NODEJS_BIN) -C $(1) --strip-components=1
 	rm -f $(1)/{CHANGELOG.md,LICENSE,README.md}
 endef
 

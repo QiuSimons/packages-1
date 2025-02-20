@@ -10,12 +10,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=haproxy
-PKG_VERSION:=2.8.3
-PKG_RELEASE:=2
+PKG_VERSION:=3.0.8
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://www.haproxy.org/download/2.8/src
-PKG_HASH:=9ecc6ffe67a977d1ed279107bbdab790d73ae2a626bc38eee23fa1f6786a759e
+PKG_SOURCE_URL:=https://www.haproxy.org/download/3.0/src
+PKG_HASH:=930ae2c33058e1f497fe62cdaacffab6cab6a91e31ba011a9a2f9fe6c5c4aebc
 
 PKG_MAINTAINER:=Thomas Heil <heil@terminal-consulting.de>, \
 		Christian Lachner <gladiac@gmail.com>
@@ -46,7 +46,7 @@ endef
 define Package/haproxy
   $(call Package/haproxy/Default)
   TITLE+=with SSL support
-  DEPENDS+= +libpcre2 +libltdl +zlib +libpthread +liblua5.3 +libopenssl +libncurses +libreadline +libatomic
+  DEPENDS+= +libpcre2 +libltdl +zlib +libpthread +liblua5.4 +libopenssl +libncurses +libreadline +libatomic
   VARIANT:=ssl
 endef
 
@@ -59,7 +59,7 @@ define Package/haproxy-nossl
   $(call Package/haproxy/Default)
   TITLE+=without SSL support
   VARIANT:=nossl
-  DEPENDS+= +libpcre2 +libltdl +zlib +libpthread +liblua5.3 +libatomic
+  DEPENDS+= +libpcre2 +libltdl +zlib +libpthread +liblua5.4 +libatomic
   CONFLICTS:=haproxy
 endef
 
@@ -83,6 +83,8 @@ endif
 ifeq ($(BUILD_VARIANT),ssl)
 	ADDON+=USE_OPENSSL=1
 	ADDON+=ADDLIB="-lcrypto -lm"
+	ADDON+=USE_QUIC=1
+	ADDON+=USE_QUIC_OPENSSL_COMPAT=1
 endif
 
 define Build/Compile
@@ -90,7 +92,7 @@ define Build/Compile
 		DESTDIR="$(PKG_INSTALL_DIR)" \
 		CC="$(TARGET_CC)" \
 		PCREDIR="$(STAGING_DIR)/usr/" \
-		USE_LUA=1 LUA_LIB_NAME="lua5.3" LUA_INC="$(STAGING_DIR)/usr/include/lua5.3" LUA_LIB="$(STAGING_DIR)/usr/lib" \
+		USE_LUA=1 LUA_LIB_NAME="lua5.4" LUA_INC="$(STAGING_DIR)/usr/include/lua5.4" LUA_LIB="$(STAGING_DIR)/usr/lib" \
 		SMALL_OPTS="-DBUFSIZE=16384 -DMAXREWRITE=1030 -DSYSTEM_MAXCONN=165530" \
 		USE_ZLIB=1 USE_PCRE2=1 USE_PCRE2_JIT=1 USE_PTHREAD_PSHARED=1 USE_LIBATOMIC=1 USE_PROMEX=1 \
 		VERSION="$(PKG_VERSION)" SUBVERS="-$(PKG_RELEASE)" \

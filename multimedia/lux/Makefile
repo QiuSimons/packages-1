@@ -5,12 +5,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lux
-PKG_VERSION:=0.21.0
+PKG_VERSION:=0.24.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/iawia002/lux/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=a2bdcaadf7430aa6ce3e38e5c223e6b8178362cd7da0408f61d288bbed05bfe3
+PKG_HASH:=69d4fe58c588cc6957b8682795210cd8154170ac51af83520c6b1334901c6d3d
 
 PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
 PKG_LICENSE:=MIT

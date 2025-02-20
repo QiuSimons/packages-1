@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=UA2F
-PKG_VERSION:=4.4.0
+PKG_VERSION:=4.9.6
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/Zxilly/UA2F/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=b5c7cb92f29b82cc09c84dda65bcf6e93a303f8264acb1e818c00daa7d31a7d2
+PKG_HASH:=4d382d0f0939e156ec7ae340ebc5f7ce4a6368320b0d978b9b16f56622c37683
 
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE
@@ -30,8 +30,7 @@ define Package/ua2f
   SUBMENU:=Routing and Redirection
   TITLE:=Change User-Agent to Fwords
   URL:=https://github.com/Zxilly/UA2F
-  DEPENDS:=+libuci +libnetfilter-conntrack +libnetfilter-queue +kmod-nft-queue \
-    +USE_GLIBC:libasan
+  DEPENDS:=+libuci +libnetfilter-conntrack +libnetfilter-queue +kmod-nft-queue
 endef
 
 define Package/ua2f/description
@@ -52,6 +51,10 @@ define Package/ua2f/config
 	help
 	  Specify the custom User-Agent string to use when UA2F_CUSTOM_USER_AGENT is enabled.
    endif
+endef
+
+define Package/ua2f/conffiles
+/etc/config/ua2f
 endef
 
 CMAKE_OPTIONS += \
