@@ -3,8 +3,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=prometheus-node-exporter-ucode
-PKG_VERSION:=2022.12.02
-PKG_RELEASE:=1
+PKG_VERSION:=2024.02.07
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=Andre Heider <a.heider@gmail.com>
 PKG_LICENSE:=Apache-2.0

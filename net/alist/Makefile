@@ -5,12 +5,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=alist
-PKG_VERSION:=3.28.0
+PKG_VERSION:=3.42.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://codeload.github.com/alist-org/alist/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=7944c1ac07c5cad71e84f6087fba1bc28dd552b220f479bc38369455e38d93d4
+PKG_SOURCE_URL:=https://codeload.github.com/AlistGo/alist/tar.gz/v$(PKG_VERSION)?
+PKG_HASH:=e9d0370c6bbeaf7e3d25b8865b000892bcc1d61f3604b744b6778ba46281dc9a
 
 PKG_LICENSE:=AGPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE
@@ -21,9 +21,12 @@ PKG_BUILD_PARALLEL:=1
 PKG_BUILD_FLAGS:=no-mips16
 
 GO_PKG:=github.com/alist-org/alist/v3
-GO_PKG_LDFLAGS_X:= \
+GO_PKG_LDFLAGS_X = \
 	$(GO_PKG)/internal/conf.Version=$(PKG_VERSION) \
-	$(GO_PKG)/internal/conf.WebVersion=$(PKG_VERSION)
+	$(GO_PKG)/internal/conf.WebVersion=$(WEB_VERSION)
+ifeq ($(filter aarch64 x86_64, $(ARCH)),)
+  GO_PKG_EXCLUDES:=drivers/lark
+endif
 
 include $(INCLUDE_DIR)/package.mk
 include ../../lang/golang/golang-package.mk
@@ -36,18 +39,23 @@ define Package/alist
   DEPENDS:=$(GO_ARCH_DEPENDS) +ca-bundle +fuse-utils
 endef
 
+define Package/alist/description
+  A file list program that supports multiple storage, and supports
+  web browsing and webdav, powered by gin and Solidjs.
+endef
+
 define Package/alist/conffiles
 /etc/alist/
 /etc/config/alist
 endef
 
-WEB_VERSION:=$(PKG_VERSION)
+WEB_VERSION:=3.42.0
 WEB_FILE:=$(PKG_NAME)-web-$(WEB_VERSION).tar.gz
 define Download/alist-web
-	URL:=https://github.com/alist-org/alist-web/releases/download/$(WEB_VERSION)/
+	URL:=https://github.com/AlistGo/alist-web/releases/download/$(WEB_VERSION)/
 	URL_FILE:=dist.tar.gz
 	FILE:=$(WEB_FILE)
-	HASH:=62f7163f4651762d92da84d4eec51f4246cdb4841c1e7082ad0da1cacb0c2a00
+	HASH:=685dd13b4da39e253085d82fd11074f051b1cbc40238479421763b3d2e49b2f0
 endef
 
 define Build/Prepare

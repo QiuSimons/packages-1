@@ -5,12 +5,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sing-box
-PKG_VERSION:=1.6.0
+PKG_VERSION:=1.11.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/SagerNet/sing-box/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=3272c9ac447d009749429f38d76e9879609c0c321442c3235ba806d995c0838a
+PKG_HASH:=51b189549395c132dce781e1c70315e4bb8386c207e171c07124759b45481d97
 
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
@@ -24,7 +24,6 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_SING_BOX_BUILD_EMBEDDED_TOR \
 	CONFIG_SING_BOX_BUILD_GRPC \
 	CONFIG_SING_BOX_BUILD_GVISOR \
-	CONFIG_SING_BOX_BUILD_LWIP \
 	CONFIG_SING_BOX_BUILD_QUIC \
 	CONFIG_SING_BOX_BUILD_REALITY_SERVER \
 	CONFIG_SING_BOX_BUILD_UTLS \
@@ -65,6 +64,7 @@ define Package/sing-box/config
   if PACKAGE_sing-box
     config SING_BOX_BUILD_ACME
     bool "Build with ACME TLS certificate issuer support"
+    default y
 
     config SING_BOX_BUILD_CLASH_API
     bool "Build with Clash API support"
@@ -75,9 +75,11 @@ define Package/sing-box/config
 
     config SING_BOX_BUILD_ECH
     bool "Build with TLS ECH extension support"
+    default y
 
     config SING_BOX_BUILD_EMBEDDED_TOR
     bool "Build with embedded Tor support"
+    depends on BROKEN
 
     config SING_BOX_BUILD_GRPC
     bool "Build with standard gPRC support"
@@ -88,9 +90,6 @@ define Package/sing-box/config
     bool "Build with gVisor support"
     default y
 
-    config SING_BOX_BUILD_LWIP
-    bool "Build with LWIP Tun stack support"
-
     config SING_BOX_BUILD_QUIC
     bool "Build with QUIC support"
     default y
@@ -100,6 +99,7 @@ define Package/sing-box/config
 
     config SING_BOX_BUILD_REALITY_SERVER
     bool "Build with REALITY TLS server support"
+    default y
 
     config SING_BOX_BUILD_UTLS
     bool "Build with uTLS support"
@@ -122,7 +122,6 @@ GO_PKG_TAGS:=$(subst $(space),$(comma),$(strip \
 	$(if $(CONFIG_SING_BOX_BUILD_EMBEDDED_TOR),with_embedded_tor) \
 	$(if $(CONFIG_SING_BOX_BUILD_GRPC),with_grpc) \
 	$(if $(CONFIG_SING_BOX_BUILD_GVISOR),with_gvisor) \
-	$(if $(CONFIG_SING_BOX_BUILD_LWIP),with_lwip) \
 	$(if $(CONFIG_SING_BOX_BUILD_QUIC),with_quic) \
 	$(if $(CONFIG_SING_BOX_BUILD_REALITY_SERVER),with_reality_server) \
 	$(if $(CONFIG_SING_BOX_BUILD_UTLS),with_utls) \
