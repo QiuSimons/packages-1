@@ -8,16 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qt6base
-PKG_BASE:=6.5
-PKG_BUGFIX:=2
+PKG_BASE:=6.9
+PKG_BUGFIX:=3
 PKG_VERSION:=$(PKG_BASE).$(PKG_BUGFIX)
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=qtbase-everywhere-src-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://mirrors.tencent.com/qt/archive/qt/$(PKG_BASE)/$(PKG_VERSION)/submodules/ \
 		  https://mirrors.aliyun.com/qt/archive/qt/$(PKG_BASE)/$(PKG_VERSION)/submodules/ \
 		  http://download.qt-project.org/archive/qt/$(PKG_BASE)/$(PKG_VERSION)/submodules/
-PKG_HASH:=3db4c729b4d80a9d8fda8dd77128406353baff4755ca619177eda4cddae71269
+PKG_HASH:=c5a1a2f660356ec081febfa782998ae5ddbc5925117e64f50e4be9cd45b8dc6e
 
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/qtbase-everywhere-src-$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/qtbase-everywhere-src-$(PKG_VERSION)
@@ -58,7 +58,7 @@ endef
 TARGET_CFLAGS+= -I$(STAGING_DIR)/usr/include/libdrm
 ifdef CONFIG_USE_GLIBC
   ifeq ($(ARCH),x86_64)
-    TARGET_LDFLAGS+= -Wl,--sysroot=$(TOOLCHAIN_DIR)
+    TARGET_LDFLAGS+= -Wl,--sysroot=$(TOOLCHAIN_ROOT_DIR)
   endif
 endif
 
@@ -103,6 +103,7 @@ CMAKE_OPTIONS+= \
 	-DFEATURE_gui=$(if $(CONFIG_PACKAGE_libQt6Gui),ON,OFF) \
 	-DFEATURE_fontconfig=OFF \
 	-DFEATURE_system_freetype=ON \
+	-DFEATURE_xkbcommon=OFF \
 	-DFEATURE_accessibility=OFF \
 	-DFEATURE_harfbuzz=OFF \
 	-DFEATURE_gif=OFF \
@@ -118,6 +119,7 @@ CMAKE_OPTIONS+= \
 	-DFEATURE_evdev=OFF \
 	-DFEATURE_vnc=OFF \
 	-DFEATURE_linuxfb=OFF \
+	-DFEATURE_libinput=OFF \
 	-DFEATURE_network=$(if $(CONFIG_PACKAGE_libQt6Network),ON,OFF) \
 	-DFEATURE_openssl=ON \
 	-DFEATURE_openssl_runtime=ON \

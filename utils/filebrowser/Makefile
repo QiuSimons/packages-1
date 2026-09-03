@@ -5,18 +5,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=filebrowser
-PKG_VERSION:=2.23.0
-PKG_RELEASE:=2
+PKG_VERSION:=2.43.0
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/filebrowser/filebrowser/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=9a99f0c51114ff7e3df89190729a8ca1c0ed48c491a5c6f9d9e266eb6657898d
+PKG_HASH:=9c3acee7567986ceef331e3eea0236b4dd9a41bf3874449fbb9bdc22c00a0aab
 
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
 
-PKG_BUILD_DEPENDS:=golang/host node/host
+PKG_BUILD_DEPENDS:=golang/host node/host node-pnpm/host
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_FLAGS:=no-mips16
 
@@ -50,9 +50,10 @@ endef
 
 define Build/Compile
 	( \
+		export PNPM_HOME="$(PKG_BUILD_DIR)/frontend" ; \
 		pushd "$(PKG_BUILD_DIR)/frontend" ; \
-		npm ci; \
-		NODE_OPTIONS=--openssl-legacy-provider npm run build ; \
+		pnpm install --frozen-lockfile ; \
+		pnpm run build ; \
 		popd ; \
 		$(call GoPackage/Build/Compile) ; \
 	)

@@ -5,24 +5,26 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=v4l2camera
-PKG_VERSION:=0.1.8
+PKG_VERSION:=0.3.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/mpromonet/v4l2camera
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_MIRROR_HASH:=3e10898db18d8b36ab41ebc9fa5cb37928e5bb4043a5a8bb1257724ee71f41ff
+PKG_MIRROR_HASH:=5014d48e397f106f9aafdbc4b5b783a66c82e67945d59dafe5f8b0b100ff4167
 
 UI_FILE:=v4l2camera-ui-$(PKG_VERSION).tgz
-UI_HASH:=9a03905fde298abe028e01ba575006a5bff5182ed3d45da01eace045cfef2f82
+UI_HASH:=0b1637626479f2d0337f5dc2d7b5befa4ce01074408e5dcbc253f7821a5f6622
 
-LIVE555_VERSION:=2023.01.19
-LIVE555_HASH:=a7c64913f7f7007c5fdc29ea811e3ca781f262271b3e42afdd4bc1041d86fa99
+LIVE555_VERSION:=2026.06.24
+LIVE555_HASH:=b22182db20fe554be886f74c453f6b900e471de9585a401b0b60228aebc27ef7
 LIVE555_FILE:=live.$(LIVE555_VERSION).tar.gz
 
-PKG_MAINTAINER:=Michel Promonet<michel.promonet@free.fr>
+PKG_MAINTAINER:=Michel Promonet <michel.promonet@free.fr>
 PKG_LICENSE:=Unlicense
 PKG_LICENSE_FILES:=LICENCE
+
+PKG_BUILD_FLAGS:=gc-sections lto
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -33,7 +35,7 @@ define Package/v4l2camera
   SECTION:=multimedia
   CATEGORY:=Multimedia
   TITLE:=v4l2camera
-  DEPENDS:=+libstdcpp 
+  DEPENDS:=+libstdcpp +alsa-lib
   URL:=https://github.com/mpromonet/v4l2camera
 endef
 
@@ -44,7 +46,8 @@ endef
 CMAKE_OPTIONS += \
        -DWITH_SSL=OFF \
        -DWITH_COMPRESS=OFF \
-       -DBUILD_UI=OFF
+       -DBUILD_UI=OFF \
+       -DVERSION=$(PKG_VERSION)
 
 define Download/live555
 	URL:=https://download.videolan.org/pub/contrib/live555/
@@ -58,11 +61,13 @@ define Download/ui
 	HASH:=$(UI_HASH)
 endef
 
+TARGET_LDFLAGS += -lasound
+
 define Build/Prepare
 	# download live555
 	$(eval $(call Download,live555))
-	mkdir -p $(PKG_BUILD_DIR)/live
-	$(TAR) -xf $(DL_DIR)/$(LIVE555_FILE) --strip=1 -C $(PKG_BUILD_DIR)/live
+	mkdir -p $(PKG_BUILD_DIR)/v4l2rtspserver/live
+	$(TAR) -xf $(DL_DIR)/$(LIVE555_FILE) --strip=1 -C $(PKG_BUILD_DIR)/v4l2rtspserver/live
 
 	# download ui
 	$(eval $(call Download,ui))

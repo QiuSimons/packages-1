@@ -96,9 +96,14 @@ else
   $(eval $(call Programmer,satamv,$(FLASHROM_PCI)))
 endif
 
-comma := ,
 MESON_ARGS += \
 	-Ddefault_programmer_name=$(DEFAULT_PROGRAMMER_NAME) \
-	-Dprogrammer=$(subst $() $(),$(comma),$(PROGRAMMER_ARGS)) \
-	-Dwerror=false \
-	-Dtests=disabled
+	-Dich_descriptors_tool=enabled \
+	-Dbash_completion=disabled \
+	-Dtests=disabled \
+	-Dprogrammer=$(subst $(space),$(comma),$(strip $(PROGRAMMER_ARGS))) \
+	-Drpmc=disabled \
+	-Duse_git_version=disabled \
+	-Dman-pages=disabled \
+	-Ddocumentation=disabled \
+	-Dgenerate_authors_list=disabled

@@ -2,12 +2,13 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mdio-netlink
+PKG_VERSION:=1.3.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://github.com/wkz/mdio-tools
+PKG_MIRROR_HASH:=c8ad937e7713f4c6a3d93a054dd6203e390f469dc7c3ed7604942ac978ba7e11
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=1.3.0
-PKG_MIRROR_HASH:=668a1dcb06da1c0a26e3aac86487ca83cff548c8c6e3763fde905a888fea5f5e
+PKG_SOURCE_VERSION:=a1fca6b8fb3b5a95ebb28324a95673488dddc005
 
 PKG_LICENSE:=GPL-2.0-only
 PKG_LICENSE_FILES:=COPYING
@@ -21,7 +22,7 @@ define KernelPackage/mdio-netlink
   CATEGORY:=Kernel modules
   SUBMENU:=Network Support
   TITLE:=mdio-netlink Linux MDIO netlink kernel module
-  KCONFIG:=CONFIG_PHYLIB=y CONFIG_MDIO_BUS=y
+  DEPENDS:=+kmod-libphy
   URL:=https://github.com/wkz/mdio-tools.git
   FILES:=$(PKG_BUILD_DIR)/kernel/mdio-netlink.ko
   AUTOLOAD:=$(call AutoProbe,mdio-netlink)

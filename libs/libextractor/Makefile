@@ -6,19 +6,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libextractor
-PKG_VERSION:=1.11
-PKG_RELEASE:=3
+PKG_VERSION:=1.19
+PKG_RELEASE:=1
 
 # ToDo:
 # - package missing optional dependencies: libexiv2, gsf, librpm, smf, tidy
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_HASH:=16f633ab8746a38547c4a1da3f4591192b0825ad83c4336f0575b85843d8bd8f
+PKG_HASH:=2d5b33cbdb21c88ae9360994d4e216627413ee9cb11b31b033c2d0cf42ef2700
 
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING
 PKG_MAINTAINER:=Daniel Golle <daniel@makrotopia.org>
+PKG_CPE_ID:=cpe:/a:gnu:libextractor
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -38,6 +39,7 @@ PLUGINS:= \
 	man \
 	mime:+libmagic \
 	mpeg:+libmpeg2 \
+	msoffice \
 	nsf \
 	nsfe \
 	odf \
@@ -45,6 +47,7 @@ PLUGINS:= \
 	png \
 	ps \
 	riff \
+	rtf \
 	s3m \
 	sid \
 	tiff:+libtiff \
@@ -57,14 +60,15 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
 
 CONFIGURE_ARGS += \
-	--disable-ffmpeg \
 	--disable-glibtest \
 	--disable-gsf \
 	--disable-rpath \
 	--with$(if $(CONFIG_PACKAGE_libextractor-plugin-gstreamer),,out)-gstreamer
 
 CONFIGURE_VARS += \
-	ac_cv_lib_jpeg_jpeg_mem_src=yes
+	ac_cv_lib_apparmor_aa_change_profile=no
+
+TARGET_CFLAGS += -D__GNU_LIBRARY__
 
 define Package/libextractor
 	SECTION:=libs

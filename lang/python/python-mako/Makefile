@@ -6,15 +6,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-mako
-PKG_VERSION:=1.2.4
+PKG_VERSION:=1.4.1
 PKG_RELEASE:=1
 
 PYPI_NAME:=Mako
-PKG_HASH:=d60a3903dc3bb01a18ad6a89cdbe2e4eadc69c0bc8ef1e3773ba53d44c3f7a34
+PYPI_SOURCE_NAME:=mako
+PKG_HASH:=d7904710b662996425a21627710c4777c45053146942cf8a7aebf757c92b8c27
 
-PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
+PKG_MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
+PKG_CPE_ID:=cpe:/a:sqlalchemy:mako
 
 PKG_HOST_ONLY:=1
 HOST_BUILD_DEPENDS:= \

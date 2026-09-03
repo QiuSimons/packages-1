@@ -6,14 +6,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-networkx
-PKG_VERSION:=3.1
+PKG_VERSION:=3.6.1
 PKG_RELEASE:=1
 
 PYPI_NAME:=networkx
-PKG_HASH:=de346335408f84de0eada6ff9fafafff9bcda11f0a0dfaa931133debb146ab61
+PKG_HASH:=26b7c357accc0c8cde558ad486283728b65b6a95d85ee1cd66bafab4c8168509
 
-PKG_LICENSE:=BSD-3-clause
+PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE.txt
+PKG_CPE_ID:=cpe:/a:python:networkx
 PKG_MAINTAINER:=W. Michael Petullo <mike@flyn.org>
 
 include ../pypi.mk
@@ -26,7 +27,7 @@ define Package/python3-networkx
   SUBMENU:=Python
   TITLE:=Creating and manipulating graphs and networks
   URL:=https://networkx.org/
-  DEPENDS:=+python3-light +python3-uuid +python3-xml
+  DEPENDS:=+python3-light +python3-logging +python3-uuid +python3-xml
 endef
 
 define Package/python3-networkx/description

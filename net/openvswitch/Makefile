@@ -20,7 +20,7 @@ PKG_VERSION:=$(ovs_version)
 PKG_RELEASE:=3
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openvswitch.org/releases/
-PKG_HASH:=e03bfab7ca82d81a7d3a36de4f390a3b5210e3f39657671f922877cd4ea6dc73
+PKG_HASH:=e1b3fa472676626853f22d63f959e5ad061e1bf57e1bbd444d0ed88f947ef8b1
 
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=LICENSE
@@ -54,6 +54,12 @@ ovs_kmod_package_name=$(if $(filter openvswitch,$(1)),openvswitch,$(1))
 ovs_kmod_is_intree=$(filter %-intree,$(1))
 ovs_kmod_upstream_name=kmod-$(call ovs_kmod_package_name,$(patsubst %-intree,%,$(1)))
 ovs_kmod_package_provides=$(call ovs_kmod_upstream_name,$(1))
+# Do not use PROVIDES for any OVS kmod. The provider-alternation logic in
+# scripts/package-metadata.pl generates recursive Kconfig dependencies when
+# kmod-openvswitch-intree provides kmod-openvswitch, because userspace
+# packages (openvswitch, ovsd, ovn-host) that +depend on kmod-openvswitch
+# get cross-referenced against the intree provider via PACKAGE_<provider>
+# < PACKAGE_<requester> conditions (#22664).
 define OvsKmodPackageTemplate
 ifeq ($(if $(call ovs_kmod_is_intree,$(1)),$(ovs_kmod_intree_not_supported)),)
   define KernelPackage/$(call ovs_kmod_package_name,$(1))
@@ -62,7 +68,6 @@ ifeq ($(if $(call ovs_kmod_is_intree,$(1)),$(ovs_kmod_intree_not_supported)),)
      SUBMENU:=Network Support
      TITLE:=$(ovs_kmod_$(1)_title)
      DEPENDS:=$(ovs_kmod_$(1)_depends) $(if $(call ovs_kmod_is_intree,$(1)),@IPV6 @DEVEL)
-     PROVIDES:=$(call ovs_kmod_package_provides,$(1))
      KCONFIG:=$(ovs_kmod_$(1)_kconfig)
      FILES:=$(ovs_kmod_$(1)_files)
      AUTOLOAD:=$(call AutoProbe,$(foreach m,$(ovs_kmod_$(1)_files),$(notdir $(patsubst %.ko,%,$(basename $(m))))))
@@ -80,9 +85,9 @@ ovs_kmod_openvswitch_depends:=\
 	  +kmod-nf-nat \
 	  +IPV6:kmod-nf-nat6 \
 	  +kmod-nf-conntrack \
-	  +IPV6:kmod-nf-conntrack6 \
 	  +kmod-nsh \
 	  +kmod-ipt-conntrack-extra \
+	  +kmod-sched-act-sample \
 
 ovs_kmod_openvswitch_files:=$(ovs_kmod_upstream_dir)/openvswitch.ko
 $(eval $(call OvsKmodPackageTemplate,openvswitch))

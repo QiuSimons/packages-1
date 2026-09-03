@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=exim
-PKG_VERSION:=4.96.2
+PKG_VERSION:=4.100
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://ftp.exim.org/pub/exim/exim4/
-PKG_HASH:=038e327e8d1e93d005bac9bb06fd22aec44d5028930d6dbe8817ad44bbfc1de6
+PKG_SOURCE_URL:=https://downloads.exim.org/exim4/
+PKG_HASH:=5bd0a3e353dbfcd5c8174388b824316a61ee2455d9052ea2f0877dee939d33b3
 PKG_MAINTAINER:=Daniel Golle <daniel@makrotopia.org>
 
 PKG_LICENSE:=GPL-2.0-or-later
@@ -45,9 +45,9 @@ LOOKUPS:= \
 define Package/exim/Default
   SECTION:=mail
   CATEGORY:=Mail
-  DEPENDS:=+libdb47 +libpcre2 $(ICONV_DEPENDS) +BUILD_NLS:libidn2 +BUILD_NLS:libidn
+  DEPENDS:= +USE_GLIBC:libcrypt-compat +libdb47 +libpcre2 $(ICONV_DEPENDS) +BUILD_NLS:libidn2 +BUILD_NLS:libidn
   TITLE:=Exim message transfer agent
-  URL:=http://www.exim.org/
+  URL:=https://exim.org/
   USERID:=exim=42:exim=42
 endef
 
@@ -126,7 +126,7 @@ define Package/exim-lookup-$(subst _,-,$(firstword $(subst %, ,$(1))))
   SECTION:=mail
   CATEGORY:=Mail
   TITLE:=Exim lookup module $(firstword $(subst %, ,$(1)))
-  URL:=http://www.exim.org/
+  URL:=https://exim.org/
   DEPENDS:=exim $(wordlist 2,$(words $(subst %, ,$(1))),$(subst %, ,$(1)))
 endef
 endef
@@ -138,7 +138,7 @@ define Package/exim/conffiles
 endef
 
 HOST_CFLAGS += -std=c99
-TARGET_CFLAGS += $(FPIC) -DNO_IP_OPTIONS -D_FILE_OFFSET_BITS=64
+TARGET_CFLAGS += $(FPIC) -DNO_IP_OPTIONS -D_FILE_OFFSET_BITS=64 -DNO_EXECINFO
 
 MAKE_VARS += build=Linux-$$(ARCH)
 MAKE_FLAGS += AR="$$(TARGET_AR) r"
@@ -152,7 +152,7 @@ define Build/Configure
 	$(SED) 's%# EXIM_GROUP=.*%EXIM_GROUP=42%' $(PKG_BUILD_DIR)/Local/Makefile
 	$(SED) 's%# EXIM_USER=.*%EXIM_USER=42%' $(PKG_BUILD_DIR)/Local/Makefile
 	$(SED) 's%# INCLUDE=.*%INCLUDE=-I$(STAGING_DIR)/usr/include -I$(STAGING_DIR)/usr/include%' $(PKG_BUILD_DIR)/Local/Makefile
-	$(SED) 's%# HAVE_IPV6=YES%HAVE_IPV6=YES%' $(PKG_BUILD_DIR)/Local/Makefile
+	$(SED) 's%# HAVE_IPV6=yes%HAVE_IPV6=yes%' $(PKG_BUILD_DIR)/Local/Makefile
 	$(SED) 's%# WITH_CONTENT_SCAN=yes%WITH_CONTENT_SCAN=yes%' $(PKG_BUILD_DIR)/Local/Makefile
 	$(SED) 's%# SUPPORT_MAILDIR=yes%SUPPORT_MAILDIR=yes%' $(PKG_BUILD_DIR)/Local/Makefile
 	$(SED) 's%# SUPPORT_MAILSTORE=yes%SUPPORT_MAILSTORE=yes%' $(PKG_BUILD_DIR)/Local/Makefile

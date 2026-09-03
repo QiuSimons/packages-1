@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2010-2015 OpenWrt.org
+# Copyright (C) 2010-2025 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,17 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=less
-PKG_VERSION:=598
+PKG_VERSION:=704
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= @GNU/less \
-	http://www.greenwoodsoftware.com/less
-PKG_HASH:=64e0eb24534ac70d15ff3a36c8853f7a48196aa230d2a104707fc4ff1a45e982
+	https://www.greenwoodsoftware.com/less
+PKG_HASH:=20a0b0a2bb2525fa53c7eee9beb854b4c9cf172eabb209af7020743547bfe9fb
 
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING
-PKG_MAINTAINER:=Julen Landa Alustiza <julen@zokormazo.info>
+PKG_MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 PKG_CPE_ID:=cpe:/a:gnu:less
 
 PKG_INSTALL:=1
@@ -30,7 +30,7 @@ define Package/less
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Pager program similar to more
-  URL:=http://www.greenwoodsoftware.com/less/
+  URL:=https://www.greenwoodsoftware.com/less/
   ALTERNATIVES:=200:/usr/bin/less:/usr/libexec/less-gnu
   DEPENDS:=+libncursesw
   PROVIDES:=less-wide

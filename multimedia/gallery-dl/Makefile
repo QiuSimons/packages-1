@@ -5,11 +5,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gallery-dl
-PKG_VERSION:=1.25.8
-PKG_RELEASE:=1
+PKG_VERSION:=1.30.8
+PKG_RELEASE:=2
 
 PYPI_NAME:=gallery_dl
-PKG_HASH:=eaad85f73486669d2266806f39422e204a8db3dee16ec6f3136dd72724d95037
+PKG_HASH:=66b740276753cd0eeef365c29eb140130f08359ff06008a497af855d00081d04
 
 PKG_LICENSE:=GPL-2.0-only
 PKG_LICENSE_FILES:=LICENSE
@@ -29,9 +29,9 @@ define Package/gallery-dl
     +python3 \
     +python3-codecs \
     +python3-ctypes \
-    +python3-email \
     +python3-requests \
     +python3-setuptools \
+    +python3-urllib \
     +python3-xml
 endef
 

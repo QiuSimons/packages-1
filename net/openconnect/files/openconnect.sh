@@ -16,12 +16,14 @@ append_args() {
 proto_openconnect_init_config() {
 	proto_config_add_string "server"
 	proto_config_add_int "port"
+	proto_config_add_string "uri"
 	proto_config_add_int "mtu"
 	proto_config_add_int "juniper"
 	proto_config_add_int "reconnect_timeout"
 	proto_config_add_string "vpn_protocol"
 	proto_config_add_boolean "pfs"
 	proto_config_add_boolean "no_dtls"
+	proto_config_add_boolean "no_external_auth"
 	proto_config_add_string "interface"
 	proto_config_add_string "username"
 	proto_config_add_string "serverhash"
@@ -36,6 +38,7 @@ proto_openconnect_init_config() {
 	proto_config_add_string "csd_wrapper"
 	proto_config_add_string "proxy"
 	proto_config_add_array 'form_entry:regex("[^:]+:[^=]+=.*")'
+	proto_config_add_string "script"
 	no_device=1
 	available=1
 }
@@ -46,6 +49,7 @@ proto_openconnect_add_form_entry() {
 
 proto_openconnect_setup() {
 	local config="$1"
+	local tmpfile="/tmp/openconnect-server.$$.tmp"
 
 	json_get_vars \
 		authgroup \
@@ -55,6 +59,7 @@ proto_openconnect_setup() {
 		juniper \
 		vpn_protocol \
 		mtu \
+		no_external_auth \
 		no_dtls \
 		os \
 		password \
@@ -64,30 +69,47 @@ proto_openconnect_setup() {
 		proxy \
 		reconnect_timeout \
 		server \
+		uri \
 		serverhash \
 		token_mode \
 		token_script \
 		token_secret \
 		usergroup \
 		username \
+		script \
 
 	ifname="vpn-$config"
 
 	logger -t openconnect "initializing..."
 
 	[ -n "$interface" ] && {
+		local trials=5
+
+		[ -n $uri ] && server=$(echo $uri | awk -F[/:] '{print $4}')
+
 		logger -t "openconnect" "adding host dependency for $server at $config"
-		for ip in $(resolveip -t 10 "$server"); do
-			logger -t "openconnect" "adding host dependency for $ip at $config"
-			proto_add_host_dependency "$config" "$ip" "$interface"
+		while ! resolveip -t 10 "$server" > "$tmpfile" && [ "$trials" -gt 0 ]; do
+			sleep 5
+			trials=$((trials - 1))
 		done
+
+		if [ -s "$tmpfile" ]; then
+			for ip in $(cat "$tmpfile"); do
+				logger -t "openconnect" "adding host dependency for $ip at $config"
+				proto_add_host_dependency "$config" "$ip" "$interface"
+			done
+		fi
+		rm -f "$tmpfile"
 	}
 
 	[ -n "$port" ] && port=":$port"
+	[ -z "$uri" ] && uri="$server$port"
 
-	append_args "$server$port" -i "$ifname" --non-inter --syslog --script /lib/netifd/vpnc-script
+	append_args "$uri" -i "$ifname" --non-inter --syslog
+	[ -n "$script" ] && append_args --script "$script"
 	[ "$pfs" = 1 ] && append_args --pfs
 	[ "$no_dtls" = 1 ] && append_args --no-dtls
+	[ "$no_external_auth" = 1 ] && append_args "--no-external-auth"
 	[ -n "$mtu" ] && append_args --mtu "$mtu"
 
 	# migrate to standard config files
@@ -127,8 +149,10 @@ proto_openconnect_setup() {
 		}
 		[ "$token_mode" = "script" ] && {
 			$token_script >> "$pwfile" 2> /dev/null || {
-				logger -t openconenct "Cannot get password from script '$token_script'"
+				logger -t openconnect "Cannot get password from script '$token_script'"
+				sleep 5
 				proto_setup_failed "$config"
+				exit 1
 			}
 		}
 		append_args --passwd-on-stdin

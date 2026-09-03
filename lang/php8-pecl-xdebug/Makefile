@@ -8,13 +8,13 @@ include $(TOPDIR)/rules.mk
 PECL_NAME:=xdebug
 PECL_LONGNAME:=Xdebug extension
 
-PKG_VERSION:=3.2.2
+PKG_VERSION:=3.4.7
 PKG_RELEASE:=1
-PKG_HASH:=f48777371f90cbb315ea4ea082a1ede6765bcfb35d7d6356ab8f71fd6dfcc157
+PKG_HASH:=7592923501e3fdb9741ad35b90e08fc6b3c5dd31eadc4c83b7b3c9dda0627b24
 
 PKG_NAME:=php8-pecl-xdebug
 PKG_SOURCE:=$(PECL_NAME)-$(PKG_VERSION).tgz
-PKG_SOURCE_URL:=http://pecl.php.net/get/
+PKG_SOURCE_URL:=https://pecl.php.net/get/
 
 PKG_MAINTAINER:=Michael Heimpold <mhei@heimpold.de>
 

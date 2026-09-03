@@ -9,18 +9,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-twisted
-PKG_VERSION:=23.8.0
+PKG_VERSION:=26.4.0
 PKG_RELEASE:=1
 
 PYPI_NAME:=Twisted
 PYPI_SOURCE_NAME:=twisted
-PKG_HASH:=3c73360add17336a622c0d811c2a2ce29866b6e59b1125fd6509b17252098a24
+PKG_HASH:=dbfd0fe1ee409d0243fdd7a6a6ff14f4948cec1fd78e0376291f805e1501fae9
 
 PKG_BUILD_DEPENDS:=libtirpc
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
-PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
+PKG_MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 PKG_CPE_ID:=cpe:/a:twistedmatrix:twisted
 
 PKG_BUILD_DEPENDS:=python-hatchling/host python-hatch-fancy-pypi-readme/host python-incremental/host
@@ -61,6 +61,7 @@ endef
 define Py3Package/python3-twisted/filespec
 +|$(PYTHON3_PKG_DIR)
 -|$(PYTHON3_PKG_DIR)/twisted/conch/scripts/tkconch.py
+-|$(PYTHON3_PKG_DIR)/twisted/test
 endef
 
 define Py3Package/python3-twisted/install

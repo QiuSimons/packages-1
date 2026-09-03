@@ -8,16 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-poetry-core
-PKG_VERSION:=1.7.0
+PKG_VERSION:=2.4.1
 PKG_RELEASE:=1
 
 PYPI_NAME:=poetry-core
 PYPI_SOURCE_NAME:=poetry_core
-PKG_HASH:=8f679b83bd9c820082637beca1204124d5d2a786e4818da47ec8acefd0353b74
+PKG_HASH:=89dceb6c10e9c6d8650a16183400e3c9ff9ddee13b0a81023b5575334a2b3744
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
-PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
+PKG_MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 
 PKG_HOST_ONLY:=1
 HOST_BUILD_DEPENDS:=python3/host python-build/host python-installer/host

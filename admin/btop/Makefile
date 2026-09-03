@@ -1,16 +1,12 @@
-# SPDX-License-Identifier: GPL-3.0-only
-#
-# Copyright (C) 2022 ImmortalWrt.org
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=btop
-PKG_VERSION:=1.2.13
-PKG_RELEASE:=3
+PKG_VERSION:=1.4.7
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL=https://codeload.github.com/aristocratos/btop/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=668dc4782432564c35ad0d32748f972248cc5c5448c9009faeb3445282920e02
+PKG_HASH:=933de2e4d1b2211a638be463eb6e8616891bfba73aef5d38060bd8319baeefc6
 
 PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
 PKG_LICENSE:=Apache-2.0
@@ -37,14 +33,11 @@ define Package/btop/description
   C++ version and continuation of bashtop and bpytop.
 endef
 
+BTOP_LDFLAGS:=-pthread -DFMT_HEADER_ONLY -D_FILE_OFFSET_BITS=64
 MAKE_FLAGS+= \
 	PLATFORM=Linux \
 	OPTFLAGS="$(TARGET_CXXFLAGS)" \
-	LDCXXFLAGS="$(TARGET_LDFLAGS) -pthread"
-
-ifneq ($(CONFIG_USE_MUSL),)
-  TARGET_CFLAGS += -D_LARGEFILE64_SOURCE
-endif
+	LDCXXFLAGS="$(TARGET_LDFLAGS) $(BTOP_LDFLAGS)"
 
 define Package/btop/install
 	$(INSTALL_DIR) $(1)/usr/bin
@@ -54,6 +47,8 @@ define Package/btop/install
 
 	$(INSTALL_DIR) $(1)/etc/profile.d
 	$(CP) $(CURDIR)/files/btop.sh $(1)/etc/profile.d/
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(CP) $(CURDIR)/files/btop.uci $(1)/etc/uci-defaults/90-btop-migrate-alias
 endef
 
 $(eval $(call BuildPackage,btop))

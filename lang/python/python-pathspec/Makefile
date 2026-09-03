@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-pathspec
-PKG_VERSION:=0.11.2
+PKG_VERSION:=1.1.1
 PKG_RELEASE:=1
 
 PYPI_NAME:=pathspec
-PKG_HASH:=e0d8d0ac2f12da61956eb2306b69f9469b42f4deb0f3cb6ed47b9cce9996ced3
+PKG_HASH:=17db5ecd524104a120e173814c90367a96a98d07c45b2e10c2f3919fff91bf5a
 
 PKG_LICENSE:=MPL-2.0
 PKG_LICENSE_FILES:=LICENSE
-PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
+PKG_MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 
 PKG_HOST_ONLY:=1
 HOST_BUILD_DEPENDS:=python3/host python-build/host python-installer/host python-flit-core/host

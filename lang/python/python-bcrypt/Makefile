@@ -6,15 +6,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-bcrypt
-PKG_VERSION:=4.0.1
+PKG_VERSION:=5.0.0
 PKG_RELEASE:=1
 
 PYPI_NAME:=bcrypt
-PKG_HASH:=27d375903ac8261cfe4047f6709d16f7d18d39b1ec92aaf72af989552a650ebd
+PKG_HASH:=f748f7c2d6fd375cc93d3fba7ef4a9e3a092421b8dbf34d8d4dc06be9492dfdd
 
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=LICENSE
-PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
+PKG_MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 
 PKG_BUILD_DEPENDS:=python-setuptools-rust/host
 

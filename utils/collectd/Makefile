@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=collectd
 PKG_VERSION:=5.12.0
-PKG_RELEASE:=49
+PKG_RELEASE:=57
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://collectd.org/files/ \
@@ -20,10 +20,13 @@ PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=aclocal.m4 libltdl/aclocal.m4
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>, Hannu Nyman <hannu.nyman@iki.fi>
 PKG_CPE_ID:=cpe:/a:collectd:collectd
+PKG_LICENSE:=MIT GPL-2.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_FLAGS:=no-mips16
+PKG_BUILD_DEPENDS:=PACKAGE_collectd-mod-write-prometheus:protobuf-c/host
 
 PKG_CONFIG_DEPENDS:= \
 	PACKAGE_COLLECTD_ENCRYPTED_NETWORK \
@@ -106,7 +109,6 @@ COLLECTD_PLUGINS_DISABLED:= \
 	sigrok \
 	slurm \
 	snmp_agent \
-	statsd \
 	synproxy \
 	sysevent \
 	tape \
@@ -120,7 +122,6 @@ COLLECTD_PLUGINS_DISABLED:= \
 	write_kafka \
 	write_log \
 	write_mongodb \
-	write_prometheus \
 	write_redis \
 	write_riemann \
 	write_sensu \
@@ -190,6 +191,7 @@ COLLECTD_PLUGINS_SELECTED:= \
 	smart \
 	snmp \
 	snmp6 \
+	statsd \
 	swap \
 	syslog \
 	table \
@@ -207,7 +209,8 @@ COLLECTD_PLUGINS_SELECTED:= \
 	vmem \
 	wireless \
 	write_graphite \
-	write_http
+	write_http \
+	write_prometheus
 
 PKG_CONFIG_DEPENDS:= \
 	$(patsubst %,CONFIG_PACKAGE_collectd-mod-%,$(subst _,-,$(COLLECTD_PLUGINS_SELECTED))) \
@@ -229,8 +232,7 @@ $(call Package/collectd/Default)
   DEPENDS:= +libpthread \
 	  +zlib \
 	  +libltdl \
-	  +jshn \
-	  +PACKAGE_collectd-mod-lua:liblua
+	  +jshn
   MENU:=1
 endef
 
@@ -268,11 +270,6 @@ CONFIGURE_VARS+= \
 	CFLAGS="$$$$CFLAGS $(FPIC)" \
 	LDFLAGS="$$$$LDFLAGS -lm -lz" \
 	KERNEL_DIR="$(LINUX_DIR)"
-
-ifneq ($(CONFIG_PACKAGE_collectd-mod-lua),)
-CONFIGURE_VARS+= \
-	LDFLAGS="$$$$LDFLAGS -llua"
-endif
 
 ifneq ($(CONFIG_PACKAGE_COLLECTD_ENCRYPTED_NETWORK),)
 CONFIGURE_ARGS+= \
@@ -512,6 +509,7 @@ $(eval $(call BuildPlugin,sensors,lm_sensors input,sensors,+PACKAGE_collectd-mod
 $(eval $(call BuildPlugin,smart,smart input,smart,+PACKAGE_collectd-mod-smart:libatasmart))
 $(eval $(call BuildPlugin,snmp,SNMP input,snmp,+PACKAGE_collectd-mod-snmp:libnetsnmp))
 $(eval $(call BuildPlugin,snmp6,snmp6 input,snmp6,))
+$(eval $(call BuildPlugin,statsd,statsd input,statsd,))
 $(eval $(call BuildPlugin,swap,swap input,swap,))
 $(eval $(call BuildPlugin,syslog,syslog output,syslog,))
 $(eval $(call BuildPlugin,tail,tail input,tail,))
@@ -530,6 +528,7 @@ $(eval $(call BuildPlugin,vmem,virtual memory usage input,vmem,))
 $(eval $(call BuildPlugin,wireless,wireless status input,wireless,))
 $(eval $(call BuildPlugin,write-graphite,Carbon/Graphite output,write_graphite,+PACKAGE_collectd-mod-write-graphite:libpthread))
 $(eval $(call BuildPlugin,write-http,HTTP POST output,write_http,+PACKAGE_collectd-mod-write-http:libcurl))
+$(eval $(call BuildPlugin,write-prometheus,Prometheus output,write_prometheus,+PACKAGE_collectd-mod-write-prometheus:libprotobuf-c +PACKAGE_collectd-mod-write-prometheus:libmicrohttpd))
 
 $(eval $(call BuildScriptPlugin,sqm,SQM/qdisc collection,sqm_collectd,+PACKAGE_collectd-mod-sqm:collectd-mod-exec))
 $(eval $(call BuildScriptLuaPlugin,ltq-dsl,Lantiq DSL collection,dsl,@ltq-dsl-app +PACKAGE_collectd-mod-ltq-dsl:collectd-mod-lua +libubus-lua))

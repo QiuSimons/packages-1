@@ -6,12 +6,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=crowdsec
-PKG_VERSION:=1.5.4
+PKG_VERSION:=1.6.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/crowdsecurity/crowdsec/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=afa4021f77e9cb87d7fd11cd86146770836dc15cad1ae8a4edce1314b14be98a
+PKG_HASH:=5f8a4d6ebdaec0a31f6c66c8523896167be59f270b4337ce1db44f62403e7d94
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
@@ -24,7 +24,6 @@ PKG_BUILD_FLAGS:=no-mips16
 CWD_SYSTEM:=openwrt
 
 CWD_BUILD_VERSION?=v$(PKG_VERSION)
-CWD_BUILD_GOVERSION:=$(shell go version | cut -d " " -f3 | sed -E 's/[go]+//g')
 CWD_BUILD_CODENAME:=alphaga
 CWD_BUILD_TIMESTAMP:=$(shell date +%F"_"%T)
 CWD_BUILD_TAG:=openwrt-$(PKG_VERSION)-$(PKG_RELEASE)
@@ -37,8 +36,7 @@ GO_PKG_LDFLAGS_X:=$(CWD_VERSION_PKG).Version=$(CWD_BUILD_VERSION) \
 	$(CWD_VERSION_PKG).System=$(CWD_SYSTEM) \
 	$(CWD_VERSION_PKG).BuildDate=$(CWD_BUILD_TIMESTAMP) \
 	$(CWD_VERSION_PKG).Codename=$(CWD_BUILD_CODENAME)  \
-	$(CWD_VERSION_PKG).Tag=$(CWD_BUILD_TAG) \
-	$(CWD_VERSION_PKG).GoVersion=$(CWD_BUILD_GOVERSION)
+	$(CWD_VERSION_PKG).Tag=$(CWD_BUILD_TAG)
 
 include $(INCLUDE_DIR)/package.mk
 include ../../lang/golang/golang-package.mk

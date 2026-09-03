@@ -8,17 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-msgpack
-PKG_VERSION:=1.0.5
+PKG_VERSION:=1.2.1
 PKG_RELEASE:=1
 
 PYPI_NAME:=msgpack
-PKG_HASH:=c075544284eadc5cddc70f4757331d99dcbc16b2bbd4849d15f8aae4cf36d31c
+PKG_HASH:=04c721c2c7448767e9e3f2520a475663d8ee0f09c31890f6d2bd70fd636a9647
 
-PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec1@gmail.com>
+PKG_MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=COPYING
 
-PKG_BUILD_DEPENDS:=python-cython/host
+PKG_BUILD_DEPENDS:= \
+	python3/host \
+	python-setuptools/host \
+	python-cython/host
 
 include ../pypi.mk
 include $(INCLUDE_DIR)/package.mk

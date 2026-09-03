@@ -59,6 +59,8 @@ proto_openthread_setup() {
 	interface="$1"
 	device="$2"
 
+	mkdir -p /var/lib/thread
+
 	json_get_vars backbone_network dataset device radio_url verbose:0
 
 	[ -n "$backbone_network" ] || proto_openthread_setup_error "$interface" MISSING_BACKBONE_NETWORK

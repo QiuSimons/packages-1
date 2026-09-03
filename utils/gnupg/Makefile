@@ -17,6 +17,7 @@ PKG_HASH:=c9462f17e651b6507848c08c430c791287cd75491f8b5a8b50c6ed46b12678ba
 
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=COPYING
+PKG_CPE_ID:=cpe:/a:gnupg:gnupg
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
@@ -29,7 +30,7 @@ define Package/gnupg/Default
   SUBMENU:=Encryption
   DEPENDS:=+zlib +libncurses +libreadline
   TITLE:=GNU privacy guard - a free PGP replacement
-  URL:=http://www.gnupg.org/
+  URL:=https://gnupg.org/
 endef
 
 define Package/gnupg
@@ -68,7 +69,7 @@ define Package/gpgv/description
 endef
 
 define Package/gnupg-utils/description
- Key management utilies for GnuPG.
+ Key management utilities for GnuPG.
  This package is needed to import keys from a keyserver.
 endef
 
